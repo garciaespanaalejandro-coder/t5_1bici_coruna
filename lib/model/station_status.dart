@@ -17,7 +17,38 @@ class station_status {
     required this.boostBikes_available,
   });
 
-  
+  factory station_status.fromJson(Map<String, dynamic> json){
+    int fitBikes = 0;
+    int efitBikes = 0;
+    int boostBikes = 0;
+
+    if(json['vehicle_types_available']!=null){
+      var vehicleList = json['vehicle_types_available'] as List;
+
+      for (dynamic v in vehicleList){
+        final typeId = v['vehicle_type_id'];
+        final count = v['count'] as int;
+
+        if(typeId == 'FIT'){
+          fitBikes+=count;
+        }else if(typeId== 'BOOST'){
+          boostBikes+=count;
+        }else if(typeId=='EFIT'){
+          efitBikes+=count;
+        }
+      }
+    }
+
+    return station_status(
+      stationId: int.parse(json['station_id']),
+      name: json['name'] ?? '',
+      bikes_available: json['num_bikes_available'] ?? 0,
+      docks_available: json['num_docks_available'] ?? 0,
+      fitBikes_available: fitBikes,
+      efitBikes_available: efitBikes,
+      boostBikes_available: boostBikes,
+    );
+  }
 
   
 
