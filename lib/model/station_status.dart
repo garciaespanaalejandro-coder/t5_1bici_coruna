@@ -1,55 +1,51 @@
 class station_status {
   final int stationId;
-  final String name;
-  final int bikes_available;
-  final int docks_available;
-  final int fitBikes_available;
-  final int efitBikes_available;
-  final int boostBikes_available;
+  final int bikesAvailable;
+  final int docksAvailable;
+  final int fitBikesAvailable;
+  final int efitBikesAvailable;
+  final int boostBikesAvailable;
+  final DateTime lastUpdated;
 
   station_status({
     required this.stationId,
-    required this.name,
-    required this.bikes_available,
-    required this.docks_available,
-    required this.fitBikes_available,
-    required this.efitBikes_available,
-    required this.boostBikes_available,
+    required this.bikesAvailable,
+    required this.docksAvailable,
+    required this.fitBikesAvailable,
+    required this.efitBikesAvailable,
+    required this.boostBikesAvailable,
+    required this.lastUpdated,
   });
 
-  factory station_status.fromJson(Map<String, dynamic> json){
-    int fitBikes = 0;
-    int efitBikes = 0;
-    int boostBikes = 0;
+  factory station_status.fromJson(Map <String, dynamic> json, int timestamp){
+    int fit=0;
+    int efit=0;
+    int boost=0;
 
     if(json['vehicle_types_available']!=null){
-      var vehicleList = json['vehicle_types_available'] as List;
+      var vehicleList= json['vehicle_types_available'] as List;
+      for(dynamic v in vehicleList){
+        final typeId= v['vehicle_type_id'];
+        final count= (v['count'] as num).toInt();
 
-      for (dynamic v in vehicleList){
-        final typeId = v['vehicle_type_id'];
-        final count = v['count'] as int;
-
-        if(typeId == 'FIT'){
-          fitBikes+=count;
-        }else if(typeId== 'BOOST'){
-          boostBikes+=count;
-        }else if(typeId=='EFIT'){
-          efitBikes+=count;
-        }
+        if(typeId=="FIT") fit+=count;
+        else if(typeId=="BOOST") boost+=count;
+        else if(typeId=="EFIT") efit+=count;
       }
     }
 
-    return station_status(
-      stationId: int.parse(json['station_id']),
-      name: json['name'] ?? '',
-      bikes_available: json['num_bikes_available'] ?? 0,
-      docks_available: json['num_docks_available'] ?? 0,
-      fitBikes_available: fitBikes,
-      efitBikes_available: efitBikes,
-      boostBikes_available: boostBikes,
-    );
-  }
+    return station_status( 
+      stationId: int.tryParse(json['station_id'].toString()) ?? 0,
+      bikesAvailable: int.tryParse(json['num_bikes_available'].toString()) ??0,
+      docksAvailable: int.tryParse(json['num_docks_available'].toString()) ??0,
+      fitBikesAvailable: fit,
+      efitBikesAvailable: efit,
+      boostBikesAvailable: boost,
 
+      lastUpdated: DateTime.fromMillisecondsSinceEpoch(timestamp*1000),
+
+    );
+    }
   
 
 }
