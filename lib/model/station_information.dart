@@ -3,21 +3,26 @@ class station_information {
   final int stationId;
   final String name;
   final int capacity;
-  final int last_updated;
+  final double lat;
+  final double lon;
 
   station_information({
     required this.stationId,
     required this.name,
     required this.capacity,
-    required this.last_updated,
+    required this.lat,
+    required this.lon,
+  
   });
 
-  factory station_information.fromJson(Map<String, dynamic> json) {
+  factory station_information.fromJson(Map<String, dynamic> json){
     return station_information(
-      stationId: (json['station_id'] as num).toInt(),
-      name:(json['name'] ?? '') as String,
-      capacity: (json['capacity'] as num).toInt(),
-      last_updated: (json['last_updated'] as num).toInt()
+      stationId: int.tryParse(json['stationId'].toString()) ??0,
+      name: (json['name']?? '') as String,
+      capacity: int.tryParse(json['capacity'].toString()) ??0,
+      lat: (json['lat'] as num?)?.toDouble() ?? 0.0,
+      lon: (json['lon'] as num?)?.toDouble() ?? 0.0,
     );
   }
+
 }
