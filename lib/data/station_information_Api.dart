@@ -13,13 +13,10 @@ class station_information_Api {
     }
 
     final decoded = jsonDecode(res.body);
-    if (decoded is! List) {
-      throw Exception('Respuesta inesperada');
+    if (decoded is Map<String, dynamic> && decoded['data'] != null) {
+       return decoded['data']['stations'] as List<dynamic>;
+    } else {
+       throw Exception('Respuesta inesperada: No se encontró data.stations');
     }
-
-    return decoded;
   }
-
-    
-
 }
