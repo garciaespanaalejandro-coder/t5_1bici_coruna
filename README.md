@@ -10,20 +10,10 @@ que usa biciCoruña expongo los datos más relevantes de las estaciones.
 2. Visualización de datos:
 - Se hace uso de gráficos para mostrar la información y no abrumar al usuario con mucha información.
 
+## Capturas de la aplicación:
+![](captura1.png)
 
-## Dependencias usadas:
-
-El proyecto utiliza las siguientes librerías externas para gestionar datos, estado y gráficos:
-
-| Dependencia | Versión | Propósito en el Proyecto |
-| :--- | :--- | :--- |
-| **flutter** | SDK | Framework base desarrollado por Google para crear la interfaz multiplataforma. |
-| **http** | `^1.1.0` | **Conexión API:** Realiza las peticiones GET para descargar el JSON con la información de las estaciones en tiempo real. |
-| **provider** | `^6.0.5` | **Gestión de Estado:** Implementa la arquitectura MVVM, permitiendo que la interfaz reaccione a los cambios en los datos (`BiciViewModel`). |
-| **fl_chart** | `^1.1.1` | **Visualización:** Librería utilizada para el Gráfico de Pastel (PieChart) de distribución de bicis y el Gráfico de Barras. |
-| **pdf** | `^3.10.6` | **Creación de Documentos:** Permite diseñar la estructura del informe (texto, viñetas, cabeceras) mediante código Dart. |
-| **printing** | `^5.14.2` | **Exportación:** Gestiona la acción de compartir, guardar o imprimir el PDF generado en el dispositivo móvil. |
-| **cupertino_icons**| `^1.0.8` | **UI Assets:** Provee el set de iconos estándar de estilo iOS utilizados en diversos widgets. |
+![](captura2.png)
 
 
 ## Justificación de las Gráficas Elegidas:
@@ -35,9 +25,16 @@ El proyecto utiliza las siguientes librerías externas para gestionar datos, est
 - Propósito: Mostrar y comparar las 3 estaciones con mayor número de bicicletas disponibles.
 - Justificación: Las barras permiten contrastar rápidamente que estación tiene más bicicletas disponibles.
 
-## Capturas de la aplicación:
-![](captura1.png)
+## Dependencias usadas:
 
-![](captura2.png)
+El proyecto utiliza las siguientes librerías externas para gestionar datos, estado y gráficos:
 
-    
+| Dependencia | Versión | Propósito en el Proyecto |
+| :--- | :--- | :--- |
+| **flutter** | SDK | Flutter es un framework de código abierto de Google para crear hermosas aplicaciones multiplataforma. |
+| **http** | `^1.1.0` | **Conexión API:** Se utiliza  para realizar solicitudes HTTP, también realiza las peticiones GET para descargar el JSON con la información de las estaciones a tiempo real. |
+| **provider** | `^6.0.5` | **Gestión de Estado:** Implementa la arquitectura MVVM, permitiendo que la interfaz reaccione a los cambios en los datos. |
+| **fl_chart** | `^1.1.1` | **Visualización:** Librería utilizada para representar gráficos en Flutter. |
+| **pdf** | `^3.10.6` | **Creación de Documentos:** Permite diseñar la estructura del informe (texto, viñetas, cabeceras) mediante código Dart. |
+| **printing** | `^5.14.2` | **Exportación:** Gestiona la acción de compartir, guardar o imprimir el PDF generado en el dispositivo móvil. |
+| **cupertino_icons**| `^1.0.8` | **UI Assets:** Provee el set de iconos estándar de estilo iOS utilizados en diversos widgets. |
