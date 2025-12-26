@@ -26,7 +26,7 @@ class BarchartHomepage extends StatelessWidget {
       Station estacion= top3[i];
 
       BarChartGroupData unaBarra= BarChartGroupData(
-        x: 1,
+        x: i,
         barRods: [
           BarChartRodData(
             toY: estacion.bikesAvailable.toDouble(),

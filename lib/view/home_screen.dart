@@ -52,34 +52,28 @@ class HomeScreen extends StatelessWidget{
           const Divider(thickness: 2),
           Expanded(
             child: vm.cargando 
-              ? const Center(child: CircularProgressIndicator()) // Si carga, rueda
+              ? const Center(child: CircularProgressIndicator()) 
               : ListView.builder(
                   itemCount: listaOrdenada.length,
                   itemBuilder: (context, index) {
                     final station = listaOrdenada[index];
                     final esFavorita = vm.esFavorita(station.id);
-
                     return Card(
                       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: ListTile(
-                        // EL CORAZÓN
                         leading: IconButton(
                           icon: Icon(
                             esFavorita ? Icons.favorite : Icons.favorite_border,
                             color: esFavorita ? Colors.red : Colors.grey,
                           ),
                           onPressed: () {
-                            // Al pulsar, avisamos al ViewModel
                             vm.cambiarFav(station.id);
-                            // Gracias al context.watch, la pantalla se redibuja sola
-                            // y la estación subirá arriba automáticamente.
                           },
                         ),
                         title: Text(station.name),
-                        subtitle: Text("Disponibles: ${station.bikesAvailable} | ⚡ ${station.ebikesAvailable}"),
+                        subtitle: Text("Disponibles: ${station.bikesAvailable} | ${station.ebikesAvailable}"),
                         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                        
-                        // NAVEGACIÓN AL DETALLE
+              
                         onTap: () {
                           Navigator.push(
                             context,
@@ -90,8 +84,8 @@ class HomeScreen extends StatelessWidget{
                         },
                       ),
                     );
-                  },
-                ),
+              },
+            ),
           ),
         ],
       ),
