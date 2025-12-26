@@ -25,15 +25,20 @@ class BiciRepository {
         if (info['station_id'].toString() == status['station_id'].toString()) {
           
           int bicisElectricas = 0;
+          int biciBoost = 0;
           
-          if (status['vehicle_types_available'] != null) {
-             for (var v in status['vehicle_types_available']) {
-               if (v['vehicle_type_id'] == 'EFIT' || v['vehicle_type_id'] == 'BOOST') {
-                 bicisElectricas += (v['count'] as int);
-               }
-             }
-          }
+          if (status['num_ebikes_available'] != null) {
+           for(var v in status['vehicle_types_available']){
+              if(v['vehicle_type_id']=='EFIT'){
+                bicisElectricas+=(v['count']as int);
+              }
 
+              if (v['vehicle_type_id'] == 'BOOST') {
+                 biciBoost += (v['count'] as int);
+               }
+           }
+
+          }
           Station nuevaEstacion = Station(
             id: int.parse(info['station_id'].toString()),
             name: info['name'],
@@ -41,6 +46,7 @@ class BiciRepository {
             lon: (info['lon'] as num).toDouble(),
             bikesAvailable: (status['num_bikes_available'] as int),
             ebikesAvailable: bicisElectricas,
+            boostAvailable: biciBoost,
             docksAvailable: (status['num_docks_available'] as int),
             lastUpdated: fecha,
           );

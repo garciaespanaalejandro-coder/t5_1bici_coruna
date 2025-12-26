@@ -5,10 +5,12 @@ class Station {
   final double lon;
   final int bikesAvailable;
   final int ebikesAvailable;
+  final int boostAvailable;
   final int docksAvailable;
   final DateTime lastUpdated;
 
   Station({
+    required this.boostAvailable, 
     required this.id,
     required this.name,
     required this.lat,
