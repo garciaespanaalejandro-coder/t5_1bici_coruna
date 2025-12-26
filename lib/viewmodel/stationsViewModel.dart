@@ -53,43 +53,40 @@ class BiciViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Map <String, dynamic> obtenerRecomendacion(Station station){
-    if(station.ebikesAvailable>=3){
-      return{
+  Map<String, dynamic> obtenerRecomendacion(Station station) {
+    if (station.ebikesAvailable > 0) {
+      return {
         "texto": "¡BAJA YA HAY ELÉCTRICAS!",
         "color": Colors.green,
         "icono": Icons.flash_on
       };
-    }else if(station.bikesAvailable>0 && station.ebikesAvailable==0&&
-        station.boostAvailable==0){
-      return{
-        "texto":"Solo bicicletas mecánicas disponibles.",
-        "color": Colors.orange,
-        "icono": Icons.pedal_bike,
-      };
-    }else if(station.docksAvailable>0){
-      return{
-        "texto":"¡LLENA YA HAY ANCLAJES LIBRES!",
-        "color": Colors.blue,
-        "icono": Icons.dock,
-      };
-    }else if(station.bikesAvailable==0 && station.ebikesAvailable==0 && station.boostAvailable==0){
-      return{
-        "texto": "Estación sin bicicletas.",
-        "color": Colors.red,
-        "icono": Icons.remove_circle,
-      };
-    }else if(station.boostAvailable>3){
-      return{
+    }
+    else if (station.boostAvailable > 0) {
+      return {
         "texto": "Bicis BOOST disponibles.",
         "color": Colors.purple,
         "icono": Icons.electric_bike,
       };
     } 
-    return{
-      "texto": "Estado desconocido",
-      "color": Colors.grey,
-      "icono": Icons.help,
+    else if (station.fitBikesAvailable > 0) {
+      return {
+        "texto": "Solo bicicletas mecánicas.",
+        "color": Colors.orange,
+        "icono": Icons.pedal_bike,
+      };
+    }
+     else if (station.docksAvailable > 0) {
+      return {
+        "texto": "Sin bicis, pero hay anclajes.",
+        "color": Colors.blue,
+        "icono": Icons.local_parking,
+      };
+    }
+    
+    return {
+      "texto": "Estación vacía o cerrada.",
+      "color": Colors.red,
+      "icono": Icons.remove_circle,
     };
   }
 }

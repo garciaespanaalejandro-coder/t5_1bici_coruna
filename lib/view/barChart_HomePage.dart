@@ -39,7 +39,7 @@ class BarchartHomepage extends StatelessWidget {
       barras.add(unaBarra);
     }
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(15),
       child: BarChart(
         BarChartData(
           alignment: BarChartAlignment.spaceAround,

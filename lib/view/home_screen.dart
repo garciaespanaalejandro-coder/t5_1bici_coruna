@@ -71,7 +71,7 @@ class HomeScreen extends StatelessWidget{
                           },
                         ),
                         title: Text(station.name),
-                        subtitle: Text("Disponibles: ${station.bikesAvailable} | ${station.ebikesAvailable}"),
+                        subtitle: Text("Bicicletas disponibles: ${station.bikesAvailable} \nDocks disponibles: ${station.docksAvailable}"),
                         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               
                         onTap: () {

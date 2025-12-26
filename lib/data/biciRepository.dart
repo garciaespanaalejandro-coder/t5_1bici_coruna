@@ -26,18 +26,28 @@ class BiciRepository {
           
           int bicisElectricas = 0;
           int biciBoost = 0;
+          int biciMecanica=0;
           
-          if (status['num_ebikes_available'] != null) {
-           for(var v in status['vehicle_types_available']){
-              if(v['vehicle_type_id']=='EFIT'){
-                bicisElectricas+=(v['count']as int);
-              }
+          if (status['vehicle_types_available'] != null) {
+             for(var v in status['vehicle_types_available']){
+               
+               final count = (v['count'] as num).toInt();
 
-              if (v['vehicle_type_id'] == 'BOOST') {
-                 biciBoost += (v['count'] as int);
+               if(v['vehicle_type_id'] == 'FIT'){
+                 biciMecanica += count;                
                }
-           }
+               if(v['vehicle_type_id'] == 'EFIT'){
+                 bicisElectricas += count;
+               }
+               if (v['vehicle_type_id'] == 'BOOST') {
+                  biciBoost += count;
+               }
+             }
+          }
 
+          int totalBicis = (status['num_bikes_available'] as int);
+          if (totalBicis > 0 && bicisElectricas == 0 && biciBoost == 0 && biciMecanica == 0) {
+              biciMecanica = totalBicis;
           }
           Station nuevaEstacion = Station(
             id: int.parse(info['station_id'].toString()),
@@ -47,8 +57,10 @@ class BiciRepository {
             bikesAvailable: (status['num_bikes_available'] as int),
             ebikesAvailable: bicisElectricas,
             boostAvailable: biciBoost,
+            fitBikesAvailable: biciMecanica,
             docksAvailable: (status['num_docks_available'] as int),
             lastUpdated: fecha,
+            direccion: (info['address']?? '') as String,
           );
 
           listaFinal.add(nuevaEstacion);

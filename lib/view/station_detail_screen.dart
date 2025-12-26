@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart'; // Para imprimir/compartir
+import 'package:printing/printing.dart'; 
 import '../viewmodel/stationsViewModel.dart';
 import '../model/station.dart';
 
@@ -14,10 +14,13 @@ class StationDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.read<BiciViewModel>(); // Read porque no necesitamos reconstruir todo si cambia el VM global
+    final vm = context.read<BiciViewModel>(); 
     final recomendacion = vm.obtenerRecomendacion(station);
-    final totalSlots = station.bikesAvailable + station.docksAvailable; 
-    // Nota: A veces la suma no es perfecta con la API, pero sirve de aproximación.
+
+    final double mecanicas = station.fitBikesAvailable.toDouble();
+    final double electricas = station.ebikesAvailable.toDouble();
+    final double libres = station.docksAvailable.toDouble();
+    final double semiElectricas= station.boostAvailable.toDouble();
 
     return Scaffold(
       appBar: AppBar(
@@ -25,106 +28,123 @@ class StationDetailScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.picture_as_pdf),
-            onPressed: () => _generarYExportarPDF(context, station, recomendacion),
+            tooltip: "Exportar Informe PDF",
+            onPressed: () => _exportPdf(context, station),
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // FECHA ACTUALIZACIÓN
-              Text(
-                "Actualizado: ${station.lastUpdated.hour}:${station.lastUpdated.minute}",
-                textAlign: TextAlign.right,
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
-              ),
-              const SizedBox(height: 10),
-
-              // --- BLOQUE DE RECOMENDACIÓN ---
-              Card(
-                color: recomendacion['color'],
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      Icon(recomendacion['icono'], size: 50, color: Colors.white),
-                      const SizedBox(height: 10),
-                      Text(
+      body: SingleChildScrollView( 
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Card(
+              color: recomendacion['color'],
+              elevation: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Icon(recomendacion['icono'], size: 40, color: Colors.white),
+                    const SizedBox(width: 15),
+                    Expanded(
+                      child: Text(
                         recomendacion['texto'],
                         style: const TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
-                        textAlign: TextAlign.center,
+                          fontSize: 18, 
+                          fontWeight: FontWeight.bold, 
+                          color: Colors.white
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
+            ),
+            
+            const SizedBox(height: 30),
 
-              const SizedBox(height: 30),
-
-              // --- GRÁFICO 2: Distribución de la Estación (Pie Chart) ---
-              const Text("Distribución de ocupación",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-              const SizedBox(height: 20),
-              SizedBox(
-                height: 250,
-                child: PieChart(
-                  PieChartData(
-                    sectionsSpace: 2,
-                    centerSpaceRadius: 40,
-                    sections: [
-                      // Sección Bicis Eléctricas
-                      PieChartSectionData(
-                        color: Colors.green,
-                        value: station.ebikesAvailable.toDouble(),
-                        title: '${station.ebikesAvailable} ⚡',
-                        radius: 50,
-                        titleStyle: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                      // Sección Bicis Mecánicas (Total bikes - electricas)
-                      PieChartSectionData(
-                        color: Colors.orange,
-                        value: (station.bikesAvailable - station.ebikesAvailable).toDouble(),
-                        title: '${station.bikesAvailable - station.ebikesAvailable} 🚲',
-                        radius: 50,
-                        titleStyle: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                      // Sección Anclajes Libres
-                      PieChartSectionData(
-                        color: Colors.grey[300],
-                        value: station.docksAvailable.toDouble(),
-                        title: '${station.docksAvailable} P',
-                        radius: 50,
-                        titleStyle: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-                      ),
-                    ],
-                  ),
+            const Text("Distribución de la Estación", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 20),
+            
+            SizedBox(
+              height: 250,
+              child: PieChart(
+                PieChartData(
+                  sectionsSpace: 2,
+                  centerSpaceRadius: 40,
+                  sections: [
+                    PieChartSectionData(
+                      color: Colors.green,
+                      value: electricas,
+                      title: '${electricas.toInt()}',
+                      radius: 50,
+                      titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                    PieChartSectionData(
+                      color: Colors.orange,
+                      value: mecanicas,
+                      title: '${mecanicas.toInt()}',
+                      radius: 50,
+                      titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                    PieChartSectionData(
+                      color: Colors.amber,
+                      value: semiElectricas,
+                      title: '${semiElectricas.toInt()}',
+                      radius: 50,
+                      titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),                      
+                    ),
+                    PieChartSectionData(
+                      color: Colors.grey.shade400,
+                      value: libres,
+                      title: '${libres.toInt()}',
+                      radius: 50,
+                      titleStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                    ),
+                  ],
                 ),
               ),
-              
-              const SizedBox(height: 20),
-              // Leyenda manual simple
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _LegendItem(color: Colors.green, text: "Eléctricas"),
-                  _LegendItem(color: Colors.orange, text: "Mecánicas"),
-                  _LegendItem(color: Colors.grey, text: "Libres"),
-                ],
-              )
-            ],
-          ),
+            ),
+
+            const SizedBox(height: 20),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _LegendItem(color: Colors.green, text: "Eléctricas"),
+                _LegendItem(color: Colors.orange, text: "Mecánicas"),
+                _LegendItem(color: Colors.amber, text: "SemiElectricas"),
+                _LegendItem(color: Colors.grey, text: "Libres"),
+              ],
+            ),
+
+            const SizedBox(height: 30),
+            const Divider(),
+
+            _buildInfoRow("Dirección / Coordenadas:", "${station.direccion} "),
+            _buildInfoRow("Última actualización:", "${station.lastUpdated}"),
+            _buildInfoRow("Total Bicis:", "${station.bikesAvailable}"),
+          ],
         ),
       ),
     );
   }
 
-  // --- LÓGICA DE EXPORTACIÓN PDF ---
-  Future<void> _generarYExportarPDF(BuildContext context, Station station, Map<String, dynamic> rec) async {
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(value, style: const TextStyle(color: Colors.grey)),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _exportPdf(BuildContext context, Station station) async {
     final pdf = pw.Document();
+    
 
     pdf.addPage(
       pw.Page(
@@ -133,55 +153,57 @@ class StationDetailScreen extends StatelessWidget {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Header(level: 0, child: pw.Text("Informe de Estación: ${station.name}")),
-              pw.SizedBox(height: 20),
-              pw.Text("Generado el: ${DateTime.now().toString()}"),
-              pw.Text("Datos actualizados API: ${station.lastUpdated.toString()}"),
-              pw.Divider(),
-              pw.SizedBox(height: 20),
-              
-              pw.Text("Estadísticas actuales:", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 18)),
-              pw.Bullet(text: "Bicis Eléctricas disponibles: ${station.ebikesAvailable}"),
-              pw.Bullet(text: "Bicis Mecánicas disponibles: ${station.bikesAvailable - station.ebikesAvailable}"),
-              pw.Bullet(text: "Anclajes libres: ${station.docksAvailable}"),
-              
-              pw.SizedBox(height: 30),
-              pw.Container(
-                padding: const pw.EdgeInsets.all(10),
-                decoration: pw.BoxDecoration(border: pw.Border.all()),
-                child: pw.Column(
-                  children: [
-                    pw.Text("Recomendación del sistema", style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                    pw.SizedBox(height: 10),
-                    pw.Text(rec['texto'], style: const pw.TextStyle(fontSize: 20, color: PdfColors.blue)),
-                  ]
-                )
+              pw.Header(
+                level: 0, 
+                child: pw.Text("Informe estacion: ${station.name}")
               ),
-              pw.Spacer(),
-              pw.Footer(title: pw.Text("BiciCoruña Alternativa App")),
+              
+              pw.Text("Direccion: ${station.direccion}"),
+              pw.SizedBox(height: 20),
+              
+              pw.Text("Estado Actual:"),
+              pw.SizedBox(height: 5),
+              
+              pw.Bullet(text: "Total de bicicletas disponibles: \n${station.bikesAvailable}"),
+              pw.SizedBox(height: 10),
+              pw.Bullet(text: "Bicicletas Eléctricas: \n${station.ebikesAvailable}"),
+              pw.Bullet(text: "Bicicletas SemiEléctricas: \n${station.boostAvailable}"),              
+              pw.Bullet(text: "Bicicletas Normales: \n${station.fitBikesAvailable}"),
+              pw.SizedBox(height: 10),
+              pw.Bullet(text: "Aparcamientos libres: \n${station.docksAvailable}"),
+
+              pw.SizedBox(height: 20),
+              pw.Divider(),
+              
+              pw.Text("Momento de actualizacion de datos: \n${station.lastUpdated}"),
+              pw.Text("Informe generado: ${DateTime.now()}")
             ],
           );
         },
       ),
     );
 
-    // Usa el paquete printing para mostrar la preview o compartir
-    await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => pdf.save(),
-    );
+    await Printing.layoutPdf(onLayout: (format) => pdf.save());
   }
 }
 
 class _LegendItem extends StatelessWidget {
   final Color color;
   final String text;
+
   const _LegendItem({required this.color, required this.text});
+
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      Container(width: 12, height: 12, color: color),
-      const SizedBox(width: 4),
-      Text(text),
-    ]);
+    return Row(
+      children: [
+        Container(
+          width: 12, height: 12, 
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 5),
+        Text(text, style: const TextStyle(fontSize: 12)),
+      ],
+    );
   }
 }
