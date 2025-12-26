@@ -30,8 +30,6 @@ class BiciViewModel extends ChangeNotifier {
   }
 
   Station? get estacionFavorita{
-    if(listaDeEstaciones.isEmpty || _idFavorita==null)return null;
-
     for(Station estacion in listaDeEstaciones){
       if(estacion.id==_idFavorita){
         return estacion;

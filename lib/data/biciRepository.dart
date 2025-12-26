@@ -49,6 +49,7 @@ class BiciRepository {
           if (totalBicis > 0 && bicisElectricas == 0 && biciBoost == 0 && biciMecanica == 0) {
               biciMecanica = totalBicis;
           }
+          
           Station nuevaEstacion = Station(
             id: int.parse(info['station_id'].toString()),
             name: info['name'],

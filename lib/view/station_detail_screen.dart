@@ -112,7 +112,7 @@ class StationDetailScreen extends StatelessWidget {
               children: [
                 _LegendItem(color: Colors.green, text: "Eléctricas"),
                 _LegendItem(color: Colors.orange, text: "Mecánicas"),
-                _LegendItem(color: Colors.amber, text: "SemiElectricas"),
+                _LegendItem(color: Colors.amber, text: "Semieléctricas"),
                 _LegendItem(color: Colors.grey, text: "Libres"),
               ],
             ),
@@ -120,9 +120,9 @@ class StationDetailScreen extends StatelessWidget {
             const SizedBox(height: 30),
             const Divider(),
 
-            _buildInfoRow("Dirección / Coordenadas:", "${station.direccion} "),
+            _buildInfoRow("Dirección:", "${station.direccion} "),
             _buildInfoRow("Última actualización:", "${station.lastUpdated}"),
-            _buildInfoRow("Total Bicis:", "${station.bikesAvailable}"),
+            _buildInfoRow("Total bicicletas:", "${station.bikesAvailable}"),
           ],
         ),
       ),
@@ -155,27 +155,27 @@ class StationDetailScreen extends StatelessWidget {
             children: [
               pw.Header(
                 level: 0, 
-                child: pw.Text("Informe estacion: ${station.name}")
+                child: pw.Text("Informe estación: ${station.name}")
               ),
               
-              pw.Text("Direccion: ${station.direccion}"),
+              pw.Text("Dirección: ${station.direccion}"),
               pw.SizedBox(height: 20),
               
-              pw.Text("Estado Actual:"),
+              pw.Text("Estado actual:"),
               pw.SizedBox(height: 5),
               
               pw.Bullet(text: "Total de bicicletas disponibles: \n${station.bikesAvailable}"),
               pw.SizedBox(height: 10),
-              pw.Bullet(text: "Bicicletas Eléctricas: \n${station.ebikesAvailable}"),
-              pw.Bullet(text: "Bicicletas SemiEléctricas: \n${station.boostAvailable}"),              
-              pw.Bullet(text: "Bicicletas Normales: \n${station.fitBikesAvailable}"),
+              pw.Bullet(text: "Bicicletas eléctricas: \n${station.ebikesAvailable}"),
+              pw.Bullet(text: "Bicicletas semieléctricas: \n${station.boostAvailable}"),              
+              pw.Bullet(text: "Bicicletas normales: \n${station.fitBikesAvailable}"),
               pw.SizedBox(height: 10),
               pw.Bullet(text: "Aparcamientos libres: \n${station.docksAvailable}"),
 
               pw.SizedBox(height: 20),
               pw.Divider(),
               
-              pw.Text("Momento de actualizacion de datos: \n${station.lastUpdated}"),
+              pw.Text("Actualización de datos: \n${station.lastUpdated}"),
               pw.Text("Informe generado: ${DateTime.now()}")
             ],
           );
