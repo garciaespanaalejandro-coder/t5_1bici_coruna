@@ -88,17 +88,19 @@ class _TopStationsChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Ordenamos para sacar el TOP 5 con más ebikes
+    // 1. Ordenamos por total de bicis (o ebikesAvailable si prefieres solo eléctricas)
     final sorted = List<Station>.from(stations)
-      ..sort((a, b) => b.ebikesAvailable.compareTo(a.ebikesAvailable));
-    final top5 = sorted.take(5).toList();
+      ..sort((a, b) => b.bikesAvailable.compareTo(a.bikesAvailable));
+    
+    // 2. Tomamos solo las 3 primeras
+    final top3 = sorted.take(3).toList();
 
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
       child: BarChart(
         BarChartData(
           alignment: BarChartAlignment.spaceAround,
-          maxY: 20, // Ajustar según datos reales o calcular dinámicamente
+          maxY: 30, // He subido un poco el límite por seguridad
           titlesData: FlTitlesData(
             leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 30)),
             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -107,12 +109,16 @@ class _TopStationsChart extends StatelessWidget {
               sideTitles: SideTitles(
                 showTitles: true,
                 getTitlesWidget: (value, meta) {
-                  // Mostrar solo las iniciales o ID para que quepa
                   int index = value.toInt();
-                  if (index >= 0 && index < top5.length) {
+                  // CORRECCIÓN: Usamos 'top3' aquí (antes tenías top5)
+                  if (index >= 0 && index < top3.length) {
+                    // Recortamos el nombre si es muy largo para que quepa
+                    String nombre = top3[index].name;
+                    if (nombre.length > 8) nombre = "${nombre.substring(0, 8)}..";
+                    
                     return Padding(
                       padding: const EdgeInsets.only(top: 5),
-                      child: Text(top5[index].id.toString(), style: const TextStyle(fontSize: 10)),
+                      child: Text(nombre, style: const TextStyle(fontSize: 10)),
                     );
                   }
                   return const Text('');
@@ -121,12 +127,14 @@ class _TopStationsChart extends StatelessWidget {
             ),
           ),
           borderData: FlBorderData(show: false),
-          barGroups: top5.asMap().entries.map((entry) {
+          // CORRECCIÓN: Usamos 'top3' para generar las barras
+          barGroups: top3.asMap().entries.map((entry) {
             return BarChartGroupData(
               x: entry.key,
               barRods: [
                 BarChartRodData(
-                  toY: entry.value.ebikesAvailable.toDouble(),
+                  // Usamos bikesAvailable para ver disponibilidad total
+                  toY: entry.value.bikesAvailable.toDouble(),
                   color: Colors.blueAccent,
                   width: 15,
                   borderRadius: BorderRadius.circular(4),
